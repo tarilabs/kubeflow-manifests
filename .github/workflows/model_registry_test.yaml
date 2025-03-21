@@ -3,12 +3,7 @@
 name: Deploy and test Kubeflow Model Registry
 on:
   pull_request:
-    paths:
-    - tests/gh-actions/install_KinD_create_KinD_cluster_install_kustomize.sh
-    - .github/workflows/model_registry_test.yaml
-    - apps/model-registry/upstream/**
-    - tests/gh-actions/install_istio.sh
-    - common/istio*/**
+  push:
 
 jobs:
   build-kfmr:
@@ -75,7 +70,7 @@ jobs:
     - name: Test KF Model Registry UI deployment
       run: |
         echo "Waiting for all Model Registry UI Pods to become ready..."
-        if ! kubectl wait --for=condition=available -n kubeflow deployment/model-registry-ui --timeout=600s ; then
+        if ! kubectl wait --for=condition=available -n kubeflow deployment/model-registry-ui --timeout=120s ; then
             kubectl events -A
             kubectl describe deployment/model-registry-ui -n kubeflow
             kubectl logs deployment/model-registry-ui -n kubeflow
